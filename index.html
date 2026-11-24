@@ -1,0 +1,26 @@
+<div id="map-error" style="display:none;position:fixed;inset:12px;z-index:20;background:#2b1111;color:#ffd6d6;padding:14px;border-radius:10px;font-family:sans-serif;font-size:13px;"></div>
+<script>
+  const errorBox = document.getElementById('map-error');
+  function showErr(msg) {
+    errorBox.style.display = 'block';
+    errorBox.textContent = 'Помилка карти: ' + msg;
+  }
+
+  if (!window.maplibregl) {
+    showErr('Не завантажився скрипт MapLibre GL JS (перевірте доступ до unpkg.com).');
+  } else {
+    const map = new maplibregl.Map({
+      container: 'map',
+      style: 'https://demotiles.maplibre.org/style.json',
+      center: [0, 0],
+      zoom: 1
+    });
+
+    map.addControl(new maplibregl.NavigationControl(), 'top-right');
+
+    map.on('error', (e) => {
+      const detail = e && e.error ? (e.error.message || String(e.error)) : 'невідома помилка стилю або мережі';
+      showErr(detail);
+    });
+  }
+</script>
